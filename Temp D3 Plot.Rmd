@@ -1,0 +1,43 @@
+---
+title: "Temp D3 Plot"
+author: "Ewan Keith"
+date: "31 July 2015"
+output: html_document
+---
+
+
+```{r, echo=FALSE, results = 'asis'}
+# datavis course programming assignment 1
+library(reshape2)
+library(rCharts)
+
+# a lot of this was inspired/borrowed from Kyle Walker 
+# (Isn't he dreamy in a charting way?)
+
+setwd("~/D3 Projects/datavis course")
+
+temp_data <- read.csv('GISTEMPData2CSV.csv')
+long_temp <- melt(temp_data, id.vars = 'Year')
+
+colnames(long_temp)[2] <- "Region"
+colnames(long_temp)[3] <- "Temperature"
+
+ids <- unique(long_temp$Region)
+
+remove <- as.logical(ids != 'Global' & ids != 'Northern.Hemisphere' & ids != 'Southern.Hemisphere')
+
+temp_plot <- nPlot(
+  Temperature ~ Year, 
+  data = long_temp, 
+  group = "Region",
+  type = "lineChart",
+  disabled = remove)
+
+temp_plot$xAxis(axisLabel = 'Year')
+temp_plot$yAxis(axisLabel = 'Temperature')
+temp_plot$chart(margin = list(left = 75))
+
+temp_plot$print('inline', cdn =TRUE, include_assets=TRUE)
+```
+
+
